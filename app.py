@@ -6,6 +6,38 @@ import random
 import os
 st.set_page_config(page_title="AI Study Planner", page_icon="📅", layout="wide")
 st.title("📅 AI Study Planner with Calendar")
+# ====================== LOGIN SCREEN (App khulte hi) ======================
+if "mode" not in st.session_state:
+    st.session_state.mode = None
+    st.session_state.is_admin = False
+
+st.subheader("👤 Welcome! Select Your Mode")
+
+col1, col2 = st.columns(2)
+
+with col1:
+    if st.button("👨‍🎓 Student Mode", use_container_width=True, type="secondary"):
+        st.session_state.mode = "student"
+        st.session_state.is_admin = False
+        st.rerun()
+
+with col2:
+    if st.button("🔑 Admin Mode", use_container_width=True, type="primary"):
+        st.session_state.mode = "admin"
+
+# Admin password check
+if st.session_state.mode == "admin":
+    admin_pass = st.text_input("🔒 Enter Admin Password", type="password", key="admin_pass")
+    if admin_pass == "admin123":          # ← Yahan apna strong password change kar lo
+        st.session_state.is_admin = True
+        st.success("✅ Admin Mode Activated!")
+        st.rerun()
+    elif admin_pass:
+        st.error("❌ Wrong Password")
+        st.stop()
+
+# Student ya Admin dono ke liye planner dikhao
+is_admin = st.session_state.is_admin
 st.markdown("**Admin Syllabus + Exam Calendar + Smart Timetable + Pomodoro**")
 
 os.makedirs("uploads", exist_ok=True)
@@ -46,33 +78,6 @@ data = load_data()
 
 # ====================== SIDEBAR (Admin) ======================
 with st.sidebar:
-	# ====================== LOGIN SCREEN (App open hote hi) ======================
-if "mode" not in st.session_state:
-    st.session_state.mode = None
-    st.session_state.is_admin = False
-
-st.subheader("👤 Select Your Mode")
-
-col1, col2 = st.columns(2)
-with col1:
-    if st.button("👨‍🎓 Student Mode", use_container_width=True):
-        st.session_state.mode = "student"
-        st.session_state.is_admin = False
-        st.rerun()
-
-with col2:
-    if st.button("🔑 Admin Mode", use_container_width=True):
-        st.session_state.mode = "admin"
-
-# Admin password check
-if st.session_state.mode == "admin":
-    admin_pass = st.text_input("Enter Admin Password", type="password")
-    if admin_pass == "admin123":          # ← Yahan apna password change kar lo
-        st.session_state.is_admin = True
-        st.success("✅ Welcome Admin!")
-    elif admin_pass:
-        st.error("❌ Wrong Password")
-        st.stop()
     st.header("🔑 Admin Login")
     admin_mode = st.text_input("Admin Password", type="password")
     is_admin = admin_mode == ADMIN_PASS
@@ -257,6 +262,7 @@ with tab5:
 
 
 st.caption("AI Study Planner • Fixed & Safe • 100% Local")
+
 
 
 
