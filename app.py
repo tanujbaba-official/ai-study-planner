@@ -85,7 +85,7 @@ tab1, tab2, tab3, tab4, tab5 = st.tabs([
 with tab1:
     st.subheader("📅 Upcoming Exams Calendar")
     if not data["subjects"]:
-        st.info("Admin se subjects add karo")
+        st.info("Admin Login for Proffessors")
     else:
         df = pd.DataFrame([{
             "Subject": s["name"],
@@ -247,6 +247,7 @@ else:
     st.info("👨‍🎓 Student Mode: View only")
 
 st.caption("AI Study Planner • Student + Admin Login • Made for Students")
+
 
 
 
