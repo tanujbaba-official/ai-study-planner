@@ -7,8 +7,7 @@ import os
 
 st.set_page_config(page_title="AI Study Planner", page_icon="📅", layout="wide")
 st.title("📅 AI Study Planner")
-
-# ====================== LOGIN SCREEN (No Sidebar) ======================
+# ====================== LOGIN SCREEN ======================
 if "mode" not in st.session_state:
     st.session_state.mode = None
     st.session_state.is_admin = False
@@ -27,16 +26,17 @@ with col2:
     if st.button("🔑 Admin Mode", use_container_width=True, type="primary"):
         st.session_state.mode = "admin"
 
-# Admin Password Check
+# Admin Password
 if st.session_state.mode == "admin":
-    admin_pass = st.text_input("🔒 Enter Admin Password", type="password")
-    if admin_pass == "admin123":          
+    admin_pass = st.text_input("🔒 Enter Admin Password", type="password", key="admin_input")
+    if admin_pass == "admin123": 
         st.session_state.is_admin = True
         st.success("✅ Admin Mode Activated!")
         st.rerun()
-    elif admin_pass:
+    elif admin_pass != "":
         st.error("❌ Wrong Password")
         st.stop()
+
 
 is_admin = st.session_state.is_admin
 
@@ -69,7 +69,8 @@ def save_data(data):
         pickle.dump(data, f)
 
 data = load_data()
-
+if st.session_state.mode is None:
+    st.stop()
 st.markdown("**Admin Syllabus + Exam Calendar + Smart Timetable + Pomodoro**")
 
 # ====================== TABS (Student & Admin both) ======================
@@ -92,9 +93,12 @@ tab1, tab2, tab3, tab4, tab5 = st.tabs([
 if st.session_state.is_admin:
     st.divider()
     st.subheader("🔧 Admin Panel - Add / Edit / Delete Subjects")
+if st.session_state.mode is not None:
+    st.markdown("**Admin Syllabus + Exam Calendar + Smart Timetable + Pomodoro**")
     
-# Tab 1: Calendar
-with tab1:
+    tab1, tab2, tab3, tab4, tab5 = st.tabs([...]) 
+    # Tab 1: Calendar
+    with tab1:
     st.subheader("📅 Upcoming Exams Calendar")
     if not data["subjects"]:
         st.info("Admin Login for Professors")
@@ -259,6 +263,9 @@ else:
     st.info("👨‍🎓 Student Mode: View only")
 
 st.caption("AI Study Planner • Student + Admin Login • Made for Students")
+
+
+
 
 
 
