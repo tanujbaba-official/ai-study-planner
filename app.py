@@ -32,10 +32,10 @@ def load_data():
             sub["progress"] = {topic: False for topic in sub.get("syllabus", [])}
 		if "syllabus_pdf" not in sub:
 			sub["syllabus_pdf"] = None
-        if "pyq_pdf" not in sub:
-			sub["pyq_pdf"] = None
-        if "book_pdf" not in sub:
-			sub["book_pdf"] = None
+        	if "pyq_pdf" not in sub:
+				sub["pyq_pdf"] = None
+        	if "book_pdf" not in sub:
+				sub["book_pdf"] = None
     return data
 
 def save_data(data):
@@ -230,4 +230,5 @@ with tab5:
 
 
 st.caption("AI Study Planner • Fixed & Safe • 100% Local")
+
 
