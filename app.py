@@ -7,6 +7,7 @@ import os
 
 st.set_page_config(page_title="AI Study Planner", page_icon="📅", layout="wide")
 st.title("📅 AI Study Planner")
+
 # ====================== LOGIN SCREEN ======================
 if "mode" not in st.session_state:
     st.session_state.mode = None
@@ -29,14 +30,13 @@ with col2:
 # Admin Password
 if st.session_state.mode == "admin":
     admin_pass = st.text_input("🔒 Enter Admin Password", type="password", key="admin_input")
-    if admin_pass == "admin123": 
+    if admin_pass == "admin123":
         st.session_state.is_admin = True
         st.success("✅ Admin Mode Activated!")
         st.rerun()
     elif admin_pass != "":
         st.error("❌ Wrong Password")
         st.stop()
-
 
 is_admin = st.session_state.is_admin
 
@@ -52,7 +52,7 @@ def load_data():
             data = pickle.load(f)
     except:
         data = {"subjects": []}
-    
+   
     for sub in data.get("subjects", []):
         if "exam" not in sub or not isinstance(sub.get("exam"), datetime.date):
             sub["exam"] = datetime.now().date() + timedelta(days=30)
@@ -69,41 +69,29 @@ def save_data(data):
         pickle.dump(data, f)
 
 data = load_data()
+
+# ====================== PLANNER ONLY AFTER MODE SELECT ======================
 if st.session_state.mode is None:
     st.stop()
-st.markdown("**Admin Syllabus + Exam Calendar + Smart Timetable + Pomodoro**")
-
-# ====================== TABS (Student & Admin both) ======================
-is_admin = st.session_state.is_admin
-# ====================== PLANNER ONLY AFTER LOGIN ======================
-if st.session_state.mode is None:
-    st.info("Select Student or Admin Mode from above 👆")
-    st.stop() 
-
 
 st.markdown("**Admin Syllabus + Exam Calendar + Smart Timetable + Pomodoro**")
+
+# ====================== TABS ======================
 tab1, tab2, tab3, tab4, tab5 = st.tabs([
-    "📅 Exam Calendar", 
-    "📚 AI Timetable", 
-    "✅ Progress Tracker", 
-    "⏰ Pomodoro Timer", 
+    "📅 Exam Calendar",
+    "📚 AI Timetable",
+    "✅ Progress Tracker",
+    "⏰ Pomodoro Timer",
     "💡 AI Tips"
 ])
-# Admin features
-if st.session_state.is_admin:
-    st.divider()
-    st.subheader("🔧 Admin Panel - Add / Edit / Delete Subjects")
-if st.session_state.mode is not None:
-    st.markdown("**Admin Syllabus + Exam Calendar + Smart Timetable + Pomodoro**")
-    
-    tab1, tab2, tab3, tab4, tab5 = st.tabs([...]) 
-    # Tab 1: Calendar
-    with tab1:
-        st.subheader("📅 Upcoming Exams Calendar")
-        if not data["subjects"]:
-            st.info("Admin Login for Professors")
-        else:
-            df = pd.DataFrame([{
+
+# Tab 1: Calendar
+with tab1:
+    st.subheader("📅 Upcoming Exams Calendar")
+    if not data["subjects"]:
+        st.info("Admin se subjects add karo")
+    else:
+        df = pd.DataFrame([{
             "Subject": s["name"],
             "Exam Date": s["exam"],
             "Days Left": (s["exam"] - datetime.now().date()).days,
@@ -142,7 +130,6 @@ with tab3:
             for topic in sub.get("syllabus", []):
                 done = st.checkbox(topic, value=sub["progress"].get(topic, False), key=f"prog_{i}_{topic}")
                 sub["progress"][topic] = done
-
             st.subheader("📥 Download Resources")
             col1, col2, col3 = st.columns(3)
             with col1:
@@ -157,7 +144,6 @@ with tab3:
                 if sub.get("book_pdf"):
                     with open(sub["book_pdf"], "rb") as f:
                         st.download_button("📚 Book/Notes PDF", f, file_name=os.path.basename(sub["book_pdf"]))
-
     if st.button("Save All Progress"):
         save_data(data)
         st.success("Saved!")
@@ -180,18 +166,18 @@ with tab5:
     ]
     st.info("💡 Today's AI Tip: " + random.choice(tips))
 
-# ====================== ADMIN FEATURES (Only when Admin logged in) ======================
+# ====================== ADMIN FEATURES (Only Admin) ======================
 if is_admin:
     st.divider()
     st.subheader("🔧 Admin Panel - Add / Edit / Delete Subjects")
-
+    
     # Add New Subject
     st.subheader("➕ Add New Subject")
     name = st.text_input("Subject Name", key="add_name")
     exam_date = st.date_input("Exam Date", value=datetime.now().date() + timedelta(days=30), key="add_date")
     difficulty = st.slider("Difficulty (1-10)", 1, 10, 5, key="add_diff")
     syllabus = st.text_area("Syllabus Topics (one per line)", placeholder="Chapter 1: Algebra\nChapter 2: Trigonometry", key="add_syl")
-    
+   
     if st.button("Add Subject & Syllabus", type="primary"):
         topics = [t.strip() for t in syllabus.split("\n") if t.strip()]
         data["subjects"].append({
@@ -208,7 +194,7 @@ if is_admin:
         st.success("✅ Added!")
         st.rerun()
 
-    # Manage Subjects (Edit + Delete + PDF Upload)
+    # Manage Subjects
     st.subheader("✏️ Manage Subjects")
     for idx, sub in enumerate(data["subjects"]):
         with st.expander(f"📖 {sub['name']}"):
@@ -263,18 +249,6 @@ else:
     st.info("👨‍🎓 Student Mode: View only")
 
 st.caption("AI Study Planner • Student + Admin Login • Made for Students")
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
