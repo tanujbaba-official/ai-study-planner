@@ -72,7 +72,15 @@ data = load_data()
 
 st.markdown("**Admin Syllabus + Exam Calendar + Smart Timetable + Pomodoro**")
 
-# ====================== TABS (Student & Admin dono ke liye) ======================
+# ====================== TABS (Student & Admin both) ======================
+is_admin = st.session_state.is_admin
+# ====================== PLANNER ONLY AFTER LOGIN ======================
+if st.session_state.mode is None:
+    st.info("👆 Upar se Student ya Admin Mode select karo")
+    st.stop()   # yahan tak code ruk jayega
+
+
+st.markdown("**Admin Syllabus + Exam Calendar + Smart Timetable + Pomodoro**")
 tab1, tab2, tab3, tab4, tab5 = st.tabs([
     "📅 Exam Calendar", 
     "📚 AI Timetable", 
@@ -80,7 +88,11 @@ tab1, tab2, tab3, tab4, tab5 = st.tabs([
     "⏰ Pomodoro Timer", 
     "💡 AI Tips"
 ])
-
+# Admin features
+if st.session_state.is_admin:
+    st.divider()
+    st.subheader("🔧 Admin Panel - Add / Edit / Delete Subjects")
+    
 # Tab 1: Calendar
 with tab1:
     st.subheader("📅 Upcoming Exams Calendar")
@@ -247,6 +259,7 @@ else:
     st.info("👨‍🎓 Student Mode: View only")
 
 st.caption("AI Study Planner • Student + Admin Login • Made for Students")
+
 
 
 
