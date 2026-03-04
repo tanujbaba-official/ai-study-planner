@@ -99,11 +99,11 @@ if st.session_state.mode is not None:
     tab1, tab2, tab3, tab4, tab5 = st.tabs([...]) 
     # Tab 1: Calendar
     with tab1:
-    st.subheader("📅 Upcoming Exams Calendar")
-    if not data["subjects"]:
-        st.info("Admin Login for Professors")
-    else:
-        df = pd.DataFrame([{
+        st.subheader("📅 Upcoming Exams Calendar")
+        if not data["subjects"]:
+            st.info("Admin Login for Professors")
+        else:
+            df = pd.DataFrame([{
             "Subject": s["name"],
             "Exam Date": s["exam"],
             "Days Left": (s["exam"] - datetime.now().date()).days,
@@ -263,6 +263,7 @@ else:
     st.info("👨‍🎓 Student Mode: View only")
 
 st.caption("AI Study Planner • Student + Admin Login • Made for Students")
+
 
 
 
