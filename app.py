@@ -21,8 +21,9 @@ def load_data():
             data = pickle.load(f)
     except:
         data = {"subjects": []}
+    
     for sub in data.get("subjects", []):
-        if "exam" not in sub:
+        if "exam" not in sub or not isinstance(sub.get("exam"), datetime.date):
             sub["exam"] = datetime.now().date() + timedelta(days=30)
         if "difficulty" not in sub:
             sub["difficulty"] = 5
@@ -30,14 +31,13 @@ def load_data():
             sub["syllabus"] = []
         if "progress" not in sub:
             sub["progress"] = {topic: False for topic in sub.get("syllabus", [])}
-		if "syllabus_pdf" not in sub:
-			sub["syllabus_pdf"] = None
-        	if "pyq_pdf" not in sub:
-				sub["pyq_pdf"] = None
-        	if "book_pdf" not in sub:
-				sub["book_pdf"] = None
+        
+        # PDF keys fix (yeh line error de rahi thi)
+        if "syllabus_pdf" not in sub: sub["syllabus_pdf"] = None
+        if "pyq_pdf" not in sub: sub["pyq_pdf"] = None
+        if "book_pdf" not in sub: sub["book_pdf"] = None
+    
     return data
-
 def save_data(data):
     with open(DB_FILE, "wb") as f:
         pickle.dump(data, f)
@@ -230,5 +230,6 @@ with tab5:
 
 
 st.caption("AI Study Planner • Fixed & Safe • 100% Local")
+
 
 
