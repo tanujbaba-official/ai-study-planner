@@ -110,61 +110,61 @@ with st.sidebar:
         st.divider()
         # === MANAGE (Edit + Delete) ===
 		
-        	st.subheader("✏️ Manage Subjects")
-        	if not data["subjects"]:
-            	st.info("No subjects yet")
-        	else:
-            	for idx, sub in enumerate(data["subjects"]):
-                	with st.expander(f"📖 {sub['name']} ({sub['exam']})"):
-                    	# Edit Form
-                    	new_name = st.text_input("Name", value=sub["name"], key=f"edit_name_{idx}")
-                    	new_exam = st.date_input("Exam Date", value=sub["exam"], key=f"edit_date_{idx}")
-                    	new_diff = st.slider("Difficulty", 1, 10, sub["difficulty"], key=f"edit_diff_{idx}")
-                    	new_syl = st.text_area("Syllabus (one per line)", 
+        st.subheader("✏️ Manage Subjects")
+        if not data["subjects"]:
+            st.info("No subjects yet")
+        else:
+            for idx, sub in enumerate(data["subjects"]):
+                with st.expander(f"📖 {sub['name']} ({sub['exam']})"):
+                    # Edit Form
+                    new_name = st.text_input("Name", value=sub["name"], key=f"edit_name_{idx}")
+                    new_exam = st.date_input("Exam Date", value=sub["exam"], key=f"edit_date_{idx}")
+                    new_diff = st.slider("Difficulty", 1, 10, sub["difficulty"], key=f"edit_diff_{idx}")
+                    new_syl = st.text_area("Syllabus (one per line)", 
                                           value="\n".join(sub["syllabus"]), key=f"edit_syl_{idx}")
 		                        # ===== PDF RESOURCES (PYQ + Syllabus + Book) =====
-                    	st.subheader("📎 Resources (PDF Upload)")
-                    	syl_pdf = st.file_uploader("Syllabus PDF", type="pdf", key=f"syl_pdf_{idx}")
-                    	pyq_pdf = st.file_uploader("PYQs PDF", type="pdf", key=f"pyq_pdf_{idx}")
-                    	book_pdf = st.file_uploader("Book / Notes PDF", type="pdf", key=f"book_pdf_{idx}")
+                    st.subheader("📎 Resources (PDF Upload)")
+                    syl_pdf = st.file_uploader("Syllabus PDF", type="pdf", key=f"syl_pdf_{idx}")
+                    pyq_pdf = st.file_uploader("PYQs PDF", type="pdf", key=f"pyq_pdf_{idx}")
+                    book_pdf = st.file_uploader("Book / Notes PDF", type="pdf", key=f"book_pdf_{idx}")
 
-                    	if syl_pdf:
-                        	path = os.path.join(UPLOAD_FOLDER, f"syl_{idx}_{syl_pdf.name}")
-                        	with open(path, "wb") as f: f.write(syl_pdf.getbuffer())
-                        	sub["syllabus_pdf"] = path
-                    	if pyq_pdf:
-                        	path = os.path.join(UPLOAD_FOLDER, f"pyq_{idx}_{pyq_pdf.name}")
-                        	with open(path, "wb") as f: f.write(pyq_pdf.getbuffer())
-                        sub["pyq_pdf"] = path
-                    	if book_pdf:
-                        path = os.path.join(UPLOAD_FOLDER, f"book_{idx}_{book_pdf.name}")
-                        with open(path, "wb") as f: f.write(book_pdf.getbuffer())
-                        sub["book_pdf"] = path
+                    if syl_pdf:
+                        path = os.path.join(UPLOAD_FOLDER, f"syl_{idx}_{syl_pdf.name}")
+                        with open(path, "wb") as f: f.write(syl_pdf.getbuffer())
+                        sub["syllabus_pdf"] = path
+                    if pyq_pdf:
+                        path = os.path.join(UPLOAD_FOLDER, f"pyq_{idx}_{pyq_pdf.name}")
+                        with open(path, "wb") as f: f.write(pyq_pdf.getbuffer())
+                    sub["pyq_pdf"] = path
+                    if book_pdf:
+                    	path = os.path.join(UPLOAD_FOLDER, f"book_{idx}_{book_pdf.name}")
+                    	with open(path, "wb") as f: f.write(book_pdf.getbuffer())
+                    	sub["book_pdf"] = path
                     
-                    	col1, col2 = st.columns(2)
-                    	with col1:
-                        	if st.button("💾 Save Changes", key=f"save_{idx}"):
-                            	topics = [t.strip() for t in new_syl.split("\n") if t.strip()]
-                            	data["subjects"][idx] = {
-                                	"name": new_name,
-                                	"exam": new_exam,
-                                	"difficulty": new_diff,
-                                	"syllabus": topics,
-                                	"progress": {topic: False for topic in topics}
+                    col1, col2 = st.columns(2)
+                    with col1:
+                        if st.button("💾 Save Changes", key=f"save_{idx}"):
+                            topics = [t.strip() for t in new_syl.split("\n") if t.strip()]
+                            data["subjects"][idx] = {
+                                "name": new_name,
+                                "exam": new_exam,
+                                "difficulty": new_diff,
+                                "syllabus": topics,
+                                "progress": {topic: False for topic in topics}
                             	}
-                            	save_data(data)
-                            	st.success("✅ Updated!")
-                            	st.rerun()
-                    	with col2:
-                        	confirm = st.checkbox("Confirm Delete?", key=f"conf_{idx}")
-                        	if st.button("🗑️ Delete Subject", key=f"del_{idx}", type="primary"):
-                            	if confirm:
-                                	del data["subjects"][idx]
-                                	save_data(data)
-                                	st.success("✅ Subject Deleted Successfully!")
-                                	st.rerun()
-                            	else:
-                                	st.error("This Cannot be Undone!")
+                            save_data(data)
+                            st.success("✅ Updated!")
+                            st.rerun()
+                    with col2:
+                        confirm = st.checkbox("Confirm Delete?", key=f"conf_{idx}")
+                        if st.button("🗑️ Delete Subject", key=f"del_{idx}", type="primary"):
+                            if confirm:
+                                del data["subjects"][idx]
+                                save_data(data)
+                                st.success("✅ Subject Deleted Successfully!")
+                                st.rerun()
+                            else:
+                                st.error("This Cannot be Undone!")
 
 # ====================== TABS ======================
 tab1, tab2, tab3, tab4, tab5 = st.tabs([
@@ -263,6 +263,7 @@ with tab5:
 
 
 st.caption("AI Study Planner • Fixed & Safe • 100% Local")
+
 
 
 
