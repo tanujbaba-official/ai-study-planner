@@ -30,9 +30,12 @@ def load_data():
             sub["syllabus"] = []
         if "progress" not in sub:
             sub["progress"] = {topic: False for topic in sub.get("syllabus", [])}
-		if "syllabus_pdf" not in sub: sub["syllabus_pdf"] = None
-        if "pyq_pdf" not in sub: sub["pyq_pdf"] = None
-        if "book_pdf" not in sub: sub["book_pdf"] = None
+		if "syllabus_pdf" not in sub:
+			sub["syllabus_pdf"] = None
+        if "pyq_pdf" not in sub:
+			sub["pyq_pdf"] = None
+        if "book_pdf" not in sub:
+			sub["book_pdf"] = None
     return data
 
 def save_data(data):
@@ -182,19 +185,27 @@ with tab3:
     st.subheader("Mark Syllabus Progress")
     for i, sub in enumerate(data["subjects"]):
         with st.expander(f"📖 {sub['name']} (Exam: {sub['exam']})"):
+            # Progress checkboxes
             for topic in sub.get("syllabus", []):
-                done = st.checkbox(topic, value=sub["progress"].get(topic, False), key=f"{i}_{topic}")
+                done = st.checkbox(topic, value=sub["progress"].get(topic, False), key=f"prog_{i}_{topic}")
                 sub["progress"][topic] = done
-    st.subheader("📥 Download Resources")
-    if sub.get("syllabus_pdf"):
-        with open(sub["syllabus_pdf"], "rb") as f:
-            st.download_button("📘 Syllabus PDF", f, file_name=os.path.basename(sub["syllabus_pdf"]))
-    if sub.get("pyq_pdf"):
-        with open(sub["pyq_pdf"], "rb") as f:
-            st.download_button("📝 PYQs PDF", f, file_name=os.path.basename(sub["pyq_pdf"]))
-    if sub.get("book_pdf"):
-        with open(sub["book_pdf"], "rb") as f:
-            st.download_button("📚 Book / Notes PDF", f, file_name=os.path.basename(sub["book_pdf"]))
+            
+            # ===== PDF DOWNLOAD BUTTONS (sirf yahin rakho) =====
+            st.subheader("📥 Download Resources")
+            col1, col2, col3 = st.columns(3)
+            with col1:
+                if sub.get("syllabus_pdf"):
+                    with open(sub["syllabus_pdf"], "rb") as f:
+                        st.download_button("📘 Syllabus PDF", f, file_name=os.path.basename(sub["syllabus_pdf"]), key=f"dl_syl_{i}")
+            with col2:
+                if sub.get("pyq_pdf"):
+                    with open(sub["pyq_pdf"], "rb") as f:
+                        st.download_button("📝 PYQs PDF", f, file_name=os.path.basename(sub["pyq_pdf"]), key=f"dl_pyq_{i}")
+            with col3:
+                if sub.get("book_pdf"):
+                    with open(sub["book_pdf"], "rb") as f:
+                        st.download_button("📚 Book/Notes PDF", f, file_name=os.path.basename(sub["book_pdf"]), key=f"dl_book_{i}")
+    
     if st.button("Save All Progress"):
         save_data(data)
         st.success("Saved!")
@@ -219,3 +230,4 @@ with tab5:
 
 
 st.caption("AI Study Planner • Fixed & Safe • 100% Local")
+
