@@ -109,7 +109,7 @@ with st.sidebar:
 
         st.divider()
         # === MANAGE (Edit + Delete) ===
-		if is_admin:
+		
         	st.subheader("✏️ Manage Subjects")
         	if not data["subjects"]:
             	st.info("No subjects yet")
@@ -263,6 +263,7 @@ with tab5:
 
 
 st.caption("AI Study Planner • Fixed & Safe • 100% Local")
+
 
 
 
