@@ -18,13 +18,13 @@ st.subheader("👤 Welcome! Select Your Mode")
 col1, col2 = st.columns(2)
 
 with col1:
-    if st.button("👨‍🎓 Student Mode", use_container_width=True, type="secondary", height=80):
+    if st.button("👨‍🎓 Student Mode", use_container_width=True, type="secondary"):
         st.session_state.mode = "student"
         st.session_state.is_admin = False
         st.rerun()
 
 with col2:
-    if st.button("🔑 Admin Mode", use_container_width=True, type="primary", height=80):
+    if st.button("🔑 Admin Mode", use_container_width=True, type="primary"):
         st.session_state.mode = "admin"
 
 # Admin Password Check
@@ -247,6 +247,7 @@ else:
     st.info("👨‍🎓 Student Mode: View only")
 
 st.caption("AI Study Planner • Student + Admin Login • Made for Students")
+
 
 
 
