@@ -30,7 +30,7 @@ with col2:
 # Admin Password Check
 if st.session_state.mode == "admin":
     admin_pass = st.text_input("🔒 Enter Admin Password", type="password")
-    if admin_pass == "admin123":          # ← Yahan apna password change kar lo
+    if admin_pass == "admin123":          
         st.session_state.is_admin = True
         st.success("✅ Admin Mode Activated!")
         st.rerun()
@@ -76,8 +76,8 @@ st.markdown("**Admin Syllabus + Exam Calendar + Smart Timetable + Pomodoro**")
 is_admin = st.session_state.is_admin
 # ====================== PLANNER ONLY AFTER LOGIN ======================
 if st.session_state.mode is None:
-    st.info("👆 Upar se Student ya Admin Mode select karo")
-    st.stop()   # yahan tak code ruk jayega
+    st.info("Select Student or Admin Mode from above 👆")
+    st.stop() 
 
 
 st.markdown("**Admin Syllabus + Exam Calendar + Smart Timetable + Pomodoro**")
@@ -259,6 +259,7 @@ else:
     st.info("👨‍🎓 Student Mode: View only")
 
 st.caption("AI Study Planner • Student + Admin Login • Made for Students")
+
 
 
 
